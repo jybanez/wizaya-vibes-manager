@@ -126,16 +126,48 @@ if (typeof(window.localStorage) !== "undefined") {
   			this.id = id;
   			this.setOptions(options); 
   		},
-  		getStorage:function(){
-  			if (!$defined(localStorage[this.id])) {
-  				localStorage[this.id] = Json.encode({});
+  		compress:function(data){
+  			var jsonstring = '';
+  			try { 
+  				jsonstring = Json.encode(data);
+  				return LZString.compressToUTF16(jsonstring);
+  			} catch(e) {
+  				console.log('Compression Error for storage '+this.id,e);
   			}
-  			return Json.decode(localStorage[this.id]);
+  			return '{}';
+  		},
+  		decompress:function(data){
+  			//console.log(data);
+  			try {
+  				var jsonstring = LZString.decompressFromUTF16(data);	
+  				//console.log(jsonstring);
+  				var data = Json.decode(jsonstring);
+  				return $defined(data)?data:{};
+  			} catch(e) {
+  				console.log('Decompression Error for storage '+this.id,e);
+  			}
+  			return {};
+  		},
+  		getStorage:function(){
+  			try{
+  				var storage = localStorage.getItem(this.id);	
+  			} catch(e) {
+  				console.log('Problem Decompressing Storage Data for '+this.id,e);
+  			}
+  			 
+  			return $defined(storage)?this.decompress(storage):{};
+  		},
+  		save:function(storage){
+  			localStorage.setItem(this.id,this.compress(storage));
+  			return this;
+  		},
+  		bind:function(data){
+  			this.save(data);
   		},
   		set:function(key,value){  			
   			var storage = this.getStorage();
   			storage[key] = value;
-  			localStorage[this.id] = Json.encode(storage);
+  			return this.save(storage);
   		},
   		get:function(key){
   			var storage = this.getStorage();
@@ -145,8 +177,14 @@ if (typeof(window.localStorage) !== "undefined") {
   			var storage = this.getStorage();
   			return $defined(storage[key]);
   		},
+  		erase:function(key){
+  			var storage = this.getStorage();
+  			delete storage[key];
+  			this.save(storage);
+  			return this;
+  		},
   		clear:function(){
-  			localStorage[this.id] = Json.encode({});
+  			localStorage.removeItem(this.id);
   		}
 	});
 	$extend(App.localStorage,{

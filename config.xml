@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.wizaya.vibes.manager" version="1.0.0" versionCode="" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>Vibes Cafe - Manager</name>
-    <description>Vibes Cafe - Manager</description>
+    <name>+Vibes Coworking Space - Manager</name>
+    <description>+Vibes Coworking Space - Manager</description>
     <author email="support@wizaya.com" href="http://www.wizaya.com">Tech Project Hive - Wizaya Division</author>
     <feature name="http://api.phonegap.com/1.0/battery" />
     <feature name="http://api.phonegap.com/1.0/camera" />
